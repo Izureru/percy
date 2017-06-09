@@ -19,5 +19,13 @@ server.post('/api/messages', connector.listen());
 
 // Receive messages from the user and respond by echoing each message back (prefixed with 'You said:')
 var bot = new builder.UniversalBot(connector, function (session) {
-    session.send("You said: %s", session.message.text);
+    session.send("You said: %s", teamQ(session.message.text));
 });
+
+function teamQ(searchTerm) {
+	return $http.get("https://askpercy.herokuapp.com/v1/percyp/" + searchTerm.toLowerCase()).then(function (resp) {
+        return resp.data;
+    }).catch(function() {
+        return $q.reject(_error);
+    });
+};
